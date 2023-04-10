@@ -16,8 +16,9 @@ class CreateGamesTable extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('game_crash');
-            $table->timestamps();
             $table->boolean('ended')->default(false);
+            $table->timestamps();
+
         });
     }
 
