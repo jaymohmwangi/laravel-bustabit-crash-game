@@ -74,7 +74,7 @@ class EloquentFundingRepository extends EloquentBaseRepository implements Fundin
         return $this->model->where('user_id', $userId)->count();
     }
 
-    // Add more methods as needed
+
     /**
      * Get all funding records for a user.
      *
