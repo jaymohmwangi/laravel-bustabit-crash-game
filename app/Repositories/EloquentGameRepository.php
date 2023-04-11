@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Contracts\GameRepositoryContract;
 use App\Models\Game;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 
 class EloquentGameRepository extends EloquentBaseRepository implements GameRepositoryContract
@@ -19,25 +20,34 @@ class EloquentGameRepository extends EloquentBaseRepository implements GameRepos
     }
 
     /**
-     * {@inheritdoc}
+     * Get the games with the highest crash points.
+     *
+     * @param int $limit
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getHighestCrashPoints(int $limit)
+    public function getHighestCrashPoints(int $limit): Collection
     {
         return $this->model->orderBy('game_crash', 'desc')->limit($limit)->get();
     }
 
     /**
-     * {@inheritdoc}
+     * Get the games with the lowest crash points.
+     *
+     * @param int $limit
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getLowestCrashPoints(int $limit)
+    public function getLowestCrashPoints(int $limit): Collection
     {
         return $this->model->orderBy('game_crash', 'asc')->limit($limit)->get();
     }
 
     /**
-     * {@inheritdoc}
+     * Get the total crash points for a specific user.
+     *
+     * @param int $userId
+     * @return float
      */
-    public function getTotalCrashPointsByUser(int $userId)
+    public function getTotalCrashPointsByUser(int $userId): float
     {
         return $this->model->whereHas('plays', function ($query) use ($userId) {
             $query->where('user_id', $userId);
@@ -45,93 +55,118 @@ class EloquentGameRepository extends EloquentBaseRepository implements GameRepos
     }
 
     /**
-     * {@inheritdoc}
+     * Get the total crash points across all games.
+     *
+     * @return float
      */
-    public function getTotalCrashPoints()
+    public function getTotalCrashPoints(): float
     {
         return $this->model->sum('game_crash');
     }
 
     /**
-     * {@inheritdoc}
+     * Get the games within a specific date range.
+     *
+     * @param string $startDate
+     * @param string $endDate
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getGamesWithinDateRange(string $startDate, string $endDate)
+    public function getGamesWithinDateRange(string $startDate, string $endDate): Collection
     {
         return $this->model->whereBetween('created_at', [$startDate, $endDate])->get();
     }
 
-
     /**
-     * {@inheritdoc}
+     * Get the most recent games.
+     *
+     * @param int $limit
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getMostRecentGames(int $limit)
+    public function getMostRecentGames(int $limit): Collection
     {
-        // Fetch the most recent games, ordered by creation date
         return $this->model->orderBy('created_at', 'desc')->limit($limit)->get();
     }
 
-
     /**
-     * {@inheritdoc}
+     * Get the average crash point for a specific user.
+     *
+     * @param int $userId
+     * @return float
      */
-    public function getAverageCrashPointByUser(int $userId)
+    public function getAverageCrashPointByUser(int $userId): float
     {
-        // Calculate the average crash point for a specific user
         return $this->model->whereHas('plays', function ($query) use ($userId) {
             $query->where('user_id', $userId);
         })->avg('game_crash');
     }
 
     /**
-     * {@inheritdoc}
+     * Get the total number of games played by a specific user.
+     *
+     * @param int $userId
+     * @return int
      */
-    public function getGameCountByUser(int $userId)
+    public function getGameCountByUser(int $userId): int
     {
-        // Count the total number of games played by a specific user
         return $this->model->whereHas('plays', function ($query) use ($userId) {
             $query->where('user_id', $userId);
         })->count();
     }
     /**
-     * {@inheritdoc}
+     * Get all games created between two dates.
+     *
+     * @param Carbon $fromDate
+     * @param Carbon $toDate
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getGamesBetweenDates(Carbon $fromDate, Carbon $toDate)
+    public function getGamesBetweenDates(Carbon $fromDate, Carbon $toDate): Collection
     {
         // Fetch games that were created between two dates
         return $this->model->whereBetween('created_at', [$fromDate, $toDate])->get();
     }
 
     /**
-     * {@inheritdoc}
+     * Get all games with a crash point greater than the specified value.
+     *
+     * @param int $crashPoint
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getGamesWithCrashPointGreaterThan(int $crashPoint)
+    public function getGamesWithCrashPointGreaterThan(int $crashPoint): Collection
     {
         // Fetch games with a crash point greater than the specified value
         return $this->model->where('game_crash', '>', $crashPoint)->get();
     }
 
     /**
-     * {@inheritdoc}
+     * Get all games with a crash point less than the specified value.
+     *
+     * @param int $crashPoint
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getGamesWithCrashPointLessThan(int $crashPoint)
+    public function getGamesWithCrashPointLessThan(int $crashPoint): Collection
     {
         // Fetch games with a crash point less than the specified value
         return $this->model->where('game_crash', '<', $crashPoint)->get();
     }
 
     /**
-     * {@inheritdoc}
+     * Get the total number of games played across all users.
+     *
+     * @return int
      */
-    public function getTotalGamesPlayed()
+    public function getTotalGamesPlayed(): int
     {
         // Count the total number of games played across all users
         return $this->model->count();
     }
 
     /**
-     * {@inheritdoc}
+     * Get the games with the most players.
+     *
+     * @param int $limit
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getGamesWithMostPlayers(int $limit)
+    public function getGamesWithMostPlayers(int $limit): Collection
     {
         // Fetch the games with the most players (using a join on the 'plays' table)
         return $this->model->select('games.*', \DB::raw('COUNT(plays.id) as player_count'))
@@ -141,10 +176,14 @@ class EloquentGameRepository extends EloquentBaseRepository implements GameRepos
             ->limit($limit)
             ->get();
     }
+
     /**
-     * {@inheritdoc}
+     * Get all games played by a specific user.
+     *
+     * @param int $userId
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getGamesByUser(int $userId)
+    public function getGamesByUser(int $userId): Collection
     {
         // Fetch games that were played by a specific user
         return $this->model->whereHas('plays', function ($query) use ($userId) {
@@ -154,62 +193,110 @@ class EloquentGameRepository extends EloquentBaseRepository implements GameRepos
 
 
     /**
-     * {@inheritdoc}
+     * Fetch games with a crash point within the specified range.
+     *
+     * @param int $minCrash
+     * @param int $maxCrash
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getGamesByCrashRange(int $minCrash, int $maxCrash)
+    public function getGamesByCrashRange(int $minCrash, int $maxCrash): Collection
     {
-        // Fetch games with a crash point within the specified range
         return $this->model->whereBetween('game_crash', [$minCrash, $maxCrash])->get();
     }
-    public function getCurrentGame()
+
+    /**
+     * Fetch the current game.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getCurrentGame(): Collection
     {
-        // Fetch the current game
         return $this->model->where('ended', false)->get();
     }
 
-    public function getLatestGames(int $limit = 10)
+    /**
+     * Fetch the latest games.
+     *
+     * @param int $limit
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getLatestGames(int $limit = 10): Collection
     {
-        // Fetch the latest games
         return $this->model->orderBy('created_at', 'desc')->take($limit)->get();
     }
 
-    public function getGameById(int $gameId)
+    /**
+     * Fetch a game by its ID.
+     *
+     * @param int $gameId
+     * @return \App\Models\Game|null
+     */
+    public function getGameById(int $gameId): ?Game
     {
-        // Fetch a game by its ID
         return $this->model->find($gameId);
     }
 
-    public function getGamesByCrashPointRange(float $minCrashPoint, float $maxCrashPoint, int $limit = 10)
+    /**
+     * Fetch games within a crash point range.
+     *
+     * @param float $minCrashPoint
+     * @param float $maxCrashPoint
+     * @param int $limit
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getGamesByCrashPointRange(float $minCrashPoint, float $maxCrashPoint, int $limit = 10): Collection
     {
-        // Fetch games within a crash point range
         return $this->model->whereBetween('game_crash', [$minCrashPoint, $maxCrashPoint])->take($limit)->get();
     }
 
-    public function getAverageCrashPoint()
+    /**
+     * Calculate the average crash point.
+     *
+     * @return float
+     */
+    public function getAverageCrashPoint(): float
     {
-        // Calculate the average crash point
         return $this->model->avg('game_crash');
     }
 
-    public function createNewGame(float $gameCrash)
+    /**
+     * Create a new game.
+     *
+     * @param float $gameCrash
+     * @return \App\Models\Game
+     */
+    public function createNewGame(float $gameCrash): Game
     {
-        // Create a new game
         return $this->model->create(['game_crash' => $gameCrash, 'status' => 'in_progress']);
     }
 
-    public function getHighestCrashPoint()
+    /**
+     * Fetch the highest crash point.
+     *
+     * @return float
+     */
+    public function getHighestCrashPoint(): float
     {
-        // Fetch the highest crash point
         return $this->model->max('game_crash');
     }
 
-    public function getLowestCrashPoint()
+    /**
+     * Fetch the lowest crash point.
+     *
+     * @return float
+     */
+    public function getLowestCrashPoint(): float
     {
-        // Fetch the lowest crash point
         return $this->model->min('game_crash');
     }
-
-    public function getGamesByPlayer(int $userId, int $limit = 10)
+    /**
+     * Fetch games by a specific player.
+     *
+     * @param int $userId
+     * @param int $limit
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getGamesByPlayer(int $userId, int $limit = 10): Collection
     {
         // Fetch games by a specific player
         return $this->model->whereHas('plays', function ($query) use ($userId) {
@@ -217,38 +304,74 @@ class EloquentGameRepository extends EloquentBaseRepository implements GameRepos
         })->take($limit)->get();
     }
 
-    public function getTotalAmountBet()
+    /**
+     * Calculate the total amount bet.
+     *
+     * @return float
+     */
+    public function getTotalAmountBet(): float
     {
         // Calculate the total amount bet
         return $this->model->sum('total_bet');
     }
 
-    public function getTotalAmountWon()
+    /**
+     * Calculate the total amount won.
+     *
+     * @return float
+     */
+    public function getTotalAmountWon(): float
     {
         // Calculate the total amount won
         return $this->model->sum('total_won');
     }
 
-    public function endGame(int $gameId)
+    /**
+     * End a game by updating its status.
+     *
+     * @param int $gameId
+     * @return int
+     */
+    public function endGame(int $gameId): int
     {
         // End a game by updating its status
         return $this->model->where('id', $gameId)->update(['ended' => true]);
     }
 
-    public function getRecentGamesWithCrashPoints(int $limit = 10)
+    /**
+     * Fetch recent games with their crash points.
+     *
+     * @param int $limit
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getRecentGamesWithCrashPoints(int $limit = 10): Collection
     {
         // Fetch recent games with their crash points
         return $this->model->select('id', 'game_crash')->orderBy('created_at', 'desc')->take($limit)->get();
     }
 
-    public function getTotalGamesPlayedByUser(int $userId)
+    /**
+     * Count the total games played by a specific user.
+     *
+     * @param int $userId
+     * @return int
+     */
+    public function getTotalGamesPlayedByUser(int $userId): int
     {
         // Count the total games played by a specific user
         return $this->model->whereHas('plays', function ($query) use ($userId) {
             $query->where('user_id', $userId);
         })->count();
     }
-    public function getLongestStreakAboveCrashPoint(float $value)
+
+    /**
+     * Fetch the longest streak of games with crash points above the given value.
+     * This implementation is a simplified example and might not be the most efficient way to achieve this.
+     *
+     * @param float $value
+     * @return int
+     */
+    public function getLongestStreakAboveCrashPoint(float $value): int
     {
         // Fetch the longest streak of games with crash points above the given value
         // This implementation is a simplified example and might not be the most efficient way to achieve this
@@ -268,8 +391,13 @@ class EloquentGameRepository extends EloquentBaseRepository implements GameRepos
 
         return $maxStreak;
     }
-
-    public function getLongestStreakBelowCrashPoint(float $value)
+    /**
+     * Get the longest streak of games with crash points below the given value.
+     *
+     * @param float $value
+     * @return int
+     */
+    public function getLongestStreakBelowCrashPoint(float $value): int
     {
         // Fetch the longest streak of games with crash points below the given value
         // This implementation is a simplified example and might not be the most efficient way to achieve this
@@ -290,7 +418,12 @@ class EloquentGameRepository extends EloquentBaseRepository implements GameRepos
         return $maxStreak;
     }
 
-    public function getTotalAmountWagered()
+    /**
+     * Calculate the total amount wagered across all games.
+     *
+     * @return float
+     */
+    public function getTotalAmountWagered(): float
     {
         // Calculate the total amount wagered across all games
         return $this->model->with('plays')->get()->sum(function ($game) {
@@ -298,7 +431,13 @@ class EloquentGameRepository extends EloquentBaseRepository implements GameRepos
         });
     }
 
-    public function getTotalAmountWageredByUser(int $userId)
+    /**
+     * Calculate the total amount wagered by a specific user across all games.
+     *
+     * @param int $userId
+     * @return float
+     */
+    public function getTotalAmountWageredByUser(int $userId): float
     {
         // Calculate the total amount wagered by a specific user across all games
         return $this->model->whereHas('plays', function ($query) use ($userId) {
@@ -308,18 +447,35 @@ class EloquentGameRepository extends EloquentBaseRepository implements GameRepos
         });
     }
 
-    public function getNumberOfGamesAboveCrashPoint(float $value)
+    /**
+     * Count the number of games with crash points above the given value.
+     *
+     * @param float $value
+     * @return int
+     */
+    public function getNumberOfGamesAboveCrashPoint(float $value): int
     {
         // Count the number of games with crash points above the given value
         return $this->model->where('game_crash', '>', $value)->count();
     }
 
-    public function getNumberOfGamesBelowCrashPoint(float $value)
+    /**
+     * Count the number of games with crash points below the given value.
+     *
+     * @param float $value
+     * @return int
+     */
+    public function getNumberOfGamesBelowCrashPoint(float $value): int
     {
         // Count the number of games with crash points below the given value
         return $this->model->where('game_crash', '<', $value)->count();
     }
 
+    /**
+     * Fetch the most recent game.
+     *
+     * @return mixed
+     */
     public function getMostRecentGame()
     {
         // Fetch the most recent game
