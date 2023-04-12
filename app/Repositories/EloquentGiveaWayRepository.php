@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Contracts\GiveawayContract;
+use App\Contracts\GiveawayRepositoryContract;
 use App\Models\Giveaway;
 use Illuminate\Support\Collection;
 
-class EloquentGiveawayRepository extends EloquentBaseRepository implements GiveawayContract
+class EloquentGiveaWayRepository extends EloquentBaseRepository implements GiveaWayRepositoryContract
 {
     public function __construct(Giveaway $model)
     {

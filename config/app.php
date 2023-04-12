@@ -177,6 +177,10 @@ return [
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
         App\Providers\UserServiceProvider::class,
+        App\Providers\GameServiceProvider::class,
+        App\Providers\GiveaWayProvider::class,
+        App\Providers\PlayServiceProvider::class,
+        App\Providers\FundingServiceProvider::class
 
     ],
 

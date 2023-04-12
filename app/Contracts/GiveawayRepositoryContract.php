@@ -5,7 +5,7 @@ namespace App\Contracts;
 use App\Models\Giveaway;
 use Illuminate\Support\Collection;
 
-interface GiveawayContract extends BaseRepositoryContract
+interface GiveaWayRepositoryContract extends BaseRepositoryContract
 {
     /**
      * Get the giveaways for a specific user.
