@@ -1,6 +1,8 @@
 ## Bustabit
 Bustabit is an online gambling game that is based on blockchain technology. It is a social gambling game that allows players to bet on the outcome of a pseudo-random number generator, which determines a multiplier that increases rapidly as the game progresses. The objective is to "cash out" or withdraw your bet before the multiplier crashes, and the game ends.
 
+The "laravel-bustabit-crash-game" code is a Laravel-based implementation of the game "Bustabit". "Jetstream" is a Laravel package that provides a user authentication and management system, while "Livewire" allows for easy integration of dynamic, reactive components using Laravel and Blade templates. "TailwindCSS" is a utility-first CSS framework that streamlines frontend development, and "Postgres" is a popular open-source relational database management system.
+
 ### Here's how the game works:
 
 - Players place their bets in Bitcoin (or other supported cryptocurrencies) before the round begins.
