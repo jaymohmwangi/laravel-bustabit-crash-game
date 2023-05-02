@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Contracts\ChatMessageRepositoryContract;
 use App\Models\ChatMessage;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class ChatMessageService
@@ -44,7 +45,7 @@ class ChatMessageService
      * @param int $id
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function find(int $id): \Illuminate\Database\Eloquent\Model
+    public function find(int $id): ?Model
     {
         return $this->chatMessageRepository->find($id);
     }

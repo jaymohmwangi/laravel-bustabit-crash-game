@@ -15,8 +15,7 @@ class CreateGameHashesTable extends Migration
     {
         Schema::create('game_hashes', function (Blueprint $table) {
             $table->unsignedBigInteger('game_id')->primary();
-            $table->text('hash')->unique();
-
+            $table->string('hash')->unique();
             $table->foreign('game_id')->references('id')->on('games')->onDelete('cascade');
         });
     }

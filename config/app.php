@@ -180,7 +180,8 @@ return [
         App\Providers\GameServiceProvider::class,
         App\Providers\GiveaWayProvider::class,
         App\Providers\PlayServiceProvider::class,
-        App\Providers\FundingServiceProvider::class
+        App\Providers\FundingServiceProvider::class,
+        App\Providers\ChatMessageServiceProvider::class
 
     ],
 
@@ -236,6 +237,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'ChatMessageService' => App\Facades\ChatMessageServiceFacade::class,
 
     ],
 

@@ -29,7 +29,7 @@ return new class extends Migration
             $table->bigInteger('games_played')->default(0);
             $table->enum('userclass', ['user', 'moderator', 'admin'])->default('user');
             $table->timestamps();
-            $table->check('balance_satoshis >= 0');
+
         });
     }
 

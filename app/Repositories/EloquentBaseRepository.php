@@ -32,7 +32,14 @@ abstract class EloquentBaseRepository
      */
     public function find(int $id): ?Model
     {
-        return $this->model->find($id);
+        $result = $this->model->find($id);
+
+        // If the result is not an instance of the Model class, return null
+        if (!$result instanceof Model) {
+            return null;
+        }
+
+        return $result;
     }
 
     /**

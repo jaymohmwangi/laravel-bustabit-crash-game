@@ -12,7 +12,6 @@ class ChatMessage extends Model
     protected $fillable = [
         'user_id',
         'message',
-        'created_at',
         'is_bot',
         'channel',
     ];
